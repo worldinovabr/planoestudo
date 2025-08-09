@@ -1,0 +1,24 @@
+{
+  "name": "planner_pwa",
+  "version": "1.0.0",
+  "description": "Arquivos incluídos: - index.html - styles.css - app.js - manifest.json - sw.js",
+  "main": "app.js",
+  "scripts": {
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "start": "live-server --open=index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/worldinovabr/planoestudo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/worldinovabr/planoestudo/issues"
+  },
+  "homepage": "https://github.com/worldinovabr/planoestudo#readme",
+  "dependencies": {
+    "live-server": "^1.2.2"
+  }
+}
