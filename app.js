@@ -1,3 +1,8 @@
+// Verificação de carregamento do script
+console.log('Planner PWA carregado');
+window.onerror = function(msg, url, line, col, error) {
+  console.error('Erro global:', msg, url, line, col, error);
+};
 // Planner PWA - simple single-file logic using localStorage
 const MAX_SUBJECTS = 6;
 const PHASES_PER_SUBJECT = 5;
@@ -23,6 +28,11 @@ const els = {
   btnImport: document.getElementById('btnImport'),
   importFile: document.getElementById('importFile')
 };
+
+// Verifica se todos os elementos existem
+Object.entries(els).forEach(([key, el]) => {
+  if (!el) console.error('Elemento não encontrado:', key);
+});
 
 function save(){ localStorage.setItem(storageKey, JSON.stringify(data)); renderSemesterList(); renderSemesterView(); }
 
