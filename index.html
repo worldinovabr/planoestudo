@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Planner Educacional Semestral (PWA)</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Planner Educacional — Semestral</h1>
+    <button id="btnAddSemester" class="primary">+ Novo Semestre</button>
+  </header>
+
+  <main id="main">
+    <aside id="sidebar">
+      <h2>Semestres</h2>
+      <ul id="semesterList"></ul>
+    </aside>
+
+    <section id="content">
+      <div id="empty" class="center">Selecione ou crie um semestre para começar.</div>
+      <div id="semesterView" class="hidden">
+        <div class="top">
+          <h2 id="semesterTitle"></h2>
+          <div>
+            <button id="btnAddSubject" class="primary">+ Adicionar Matéria</button>
+            <button id="btnExport" title="Exportar JSON">Exportar</button>
+            <button id="btnImport" title="Importar JSON">Importar</button>
+            <input type="file" id="importFile" accept=".json" style="display:none"/>
+          </div>
+        </div>
+
+        <div id="subjects" class="grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal area -->
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <button class="close" id="modalClose">&times;</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <footer>
+    <small>App PWA simples — funciona offline, usa localStorage. Abra no VS Code e rode via Live Server para melhor experiência.</small>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    // register service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(()=>{console.log('sw failed')});
+    }
+  </script>
+</body>
+</html>
