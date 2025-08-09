@@ -18,3 +18,12 @@
     }
   ]
 }
+{
+  "name": "Novo Planner PWA",
+  "short_name": "Planner",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#181f3a",
+  "theme_color": "#7c3aed",
+  "icons": []
+}

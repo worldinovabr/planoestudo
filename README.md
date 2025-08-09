@@ -1,5 +1,15 @@
 # Planner Educacional Semestral — PWA
+# Planner Educacional Semestral (PWA)
 
+Planner moderno para organizar semestres, matérias, fases, trabalhos e provas. Funciona offline, responsivo, pronto para integração com Firebase.
+
+## Como rodar localmente
+1. Instale dependências: `npm install`
+2. Rode: `npm start`
+3. Acesse `http://localhost:8080` ou porta informada
+
+## Publicação
+Recomenda-se usar GitHub Pages para publicar o app online.
 Arquivos incluídos:
 - index.html
 - styles.css

@@ -24,7 +24,235 @@ window.onerror = function(msg, url, line, col, error) {
 // Planner PWA - simple single-file logic using localStorage
 const MAX_SUBJECTS = 6;
 const PHASES_PER_SUBJECT = 5;
+// Planner PWA - JS moderno, funcional, sem erros
+document.addEventListener('DOMContentLoaded', () => {
+  // Elementos principais
+  const els = {
+    semesterList: document.getElementById('semesterList'),
+    btnAddSemester: document.getElementById('btnAddSemester'),
+    semesterView: document.getElementById('semesterView'),
+    empty: document.getElementById('empty'),
+    semesterTitle: document.getElementById('semesterTitle'),
+    subjects: document.getElementById('subjects'),
+    btnAddSubject: document.getElementById('btnAddSubject'),
+    modal: document.getElementById('modal'),
+    modalBody: document.getElementById('modalBody'),
+    modalClose: document.getElementById('modalClose'),
+    btnExport: document.getElementById('btnExport'),
+    btnImport: document.getElementById('btnImport'),
+    importFile: document.getElementById('importFile')
+  };
 
+  // Dados
+  const MAX_SUBJECTS = 6;
+  const PHASES_PER_SUBJECT = 5;
+  const storageKey = 'planner_semesters_v1';
+  let data = JSON.parse(localStorage.getItem(storageKey) || '[]');
+  let currentSemesterId = null;
+
+  // Funções principais
+  function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+  function save(){ localStorage.setItem(storageKey, JSON.stringify(data)); renderSemesterList(); renderSemesterView(); }
+  function createSemester(name){ data.push({ id: uid(), name: name||('Semestre '+(data.length+1)), subjects: []}); save(); }
+  function deleteSemester(id){ data = data.filter(s=>s.id!==id); if(currentSemesterId===id) currentSemesterId = null; save(); }
+  function addSubject(semesterId, subject){
+    const sem = data.find(s=>s.id===semesterId);
+    if(!sem) return;
+    if(sem.subjects.length>=MAX_SUBJECTS){ alert('Máximo de '+MAX_SUBJECTS+' matérias por semestre'); return; }
+    sem.subjects.push(subject); save();
+  }
+  function removeSubject(semesterId, subjectId){
+    const sem = data.find(s=>s.id===semesterId);
+    sem.subjects = sem.subjects.filter(x=>x.id!==subjectId); save();
+  }
+
+  // Renderização
+  function renderSemesterList(){
+    els.semesterList.innerHTML = '';
+    data.forEach(s=>{
+      const li = document.createElement('li');
+      li.textContent = s.name;
+      li.onclick = ()=>{ currentSemesterId = s.id; renderSemesterView(); renderSemesterList(); };
+      if(currentSemesterId===s.id) li.classList.add('active');
+      const btns = document.createElement('div');
+      const del = document.createElement('button'); del.textContent='✖'; del.className='icon';
+      del.onclick = (ev)=>{ ev.stopPropagation(); if(confirm('Deletar semestre?')){ deleteSemester(s.id); } };
+      btns.appendChild(del); li.appendChild(btns);
+      els.semesterList.appendChild(li);
+    });
+  }
+  function renderSemesterView(){
+    if(!currentSemesterId){ els.semesterView.classList.add('hidden'); els.empty.classList.remove('hidden'); return; }
+    const sem = data.find(s=>s.id===currentSemesterId);
+    if(!sem){ els.semesterView.classList.add('hidden'); els.empty.classList.remove('hidden'); return; }
+    els.semesterTitle.textContent = sem.name;
+    els.semesterView.classList.remove('hidden'); els.empty.classList.add('hidden');
+    els.subjects.innerHTML = '';
+    sem.subjects.forEach(sub=>{
+      const card = document.createElement('div'); card.className='card';
+      const colorTag = document.createElement('div'); colorTag.className='tag'; colorTag.textContent = sub.name;
+      card.appendChild(colorTag);
+      const h = document.createElement('h3'); h.textContent = sub.name+' — '+(sub.teacher||'');
+      card.appendChild(h);
+      // Fases
+      sub.phases.forEach((p, idx)=>{
+        const ph = document.createElement('div'); ph.className='phase';
+        ph.innerHTML = `<strong>Fase ${idx+1} - ${p.title||'Sem título'}</strong>
+          <div class="small"> ${p.start||''} → ${p.end||''} • ${p.done? 'Concluída' : 'Pendente'}</div>
+          <div class="small">Links: ${ (p.links||[]).length } • Notas: ${p.notes? 'Sim' : 'Sem' }</div>`;
+        const btn = document.createElement('button'); btn.textContent = p.done? 'Marcar Pendente' : 'Marcar Concluída';
+        btn.className='primary'; btn.onclick = ()=>{ p.done = !p.done; save(); };
+        ph.appendChild(btn);
+        const edit = document.createElement('button'); edit.textContent='Editar'; edit.className='icon';
+        edit.onclick = ()=>{ openPhaseEditor(sub, p); };
+        ph.appendChild(edit);
+        card.appendChild(ph);
+      });
+      // Trabalhos e provas
+      const works = sub.works||[];
+      const exams = sub.exams||[];
+      const meta = document.createElement('div'); meta.className='small';
+      meta.textContent = `Trabalhos: ${works.length} • Provas: ${exams.length}`;
+      card.appendChild(meta);
+      const actions = document.createElement('div'); actions.className='actions';
+      const btnAddPhase = document.createElement('button'); btnAddPhase.textContent='Editar Matéria'; btnAddPhase.className='primary';
+      btnAddPhase.onclick = ()=>{ openSubjectEditor(sub); };
+      const btnDelete = document.createElement('button'); btnDelete.textContent='Excluir'; btnDelete.className='icon';
+      btnDelete.onclick = ()=>{ if(confirm('Excluir matéria?')){ removeSubject(currentSemesterId, sub.id); } };
+      actions.appendChild(btnAddPhase); actions.appendChild(btnDelete);
+      card.appendChild(actions);
+      els.subjects.appendChild(card);
+    });
+    if(sem.subjects.length===0){
+      els.subjects.innerHTML = '<div class="center card">Nenhuma matéria. Clique em "Adicionar Matéria" para criar (máx '+MAX_SUBJECTS+').</div>';
+    }
+  }
+
+  // Modal
+  function openModal(html){
+    if (!html || (!html.innerHTML && !html.textContent)) {
+      els.modal.classList.add('hidden');
+      els.modalBody.innerHTML = '';
+      return;
+    }
+    const temp = document.createElement('div');
+    temp.appendChild(html.cloneNode(true));
+    const isEmpty = !temp.textContent.trim() && !temp.querySelector('input,textarea,button,select');
+    if (isEmpty) {
+      els.modal.classList.add('hidden');
+      els.modalBody.innerHTML = '';
+      return;
+    }
+    els.modalBody.innerHTML = '';
+    els.modalBody.appendChild(html);
+    els.modal.classList.remove('hidden');
+  }
+  function closeModal(){ els.modal.classList.add('hidden'); }
+  els.modalClose.onclick = closeModal;
+  els.modal.onclick = (e)=>{ if(e.target===els.modal) closeModal(); };
+
+  // CRUD de semestres/matérias
+  els.btnAddSemester.onclick = ()=> {
+    const name = prompt('Nome do semestre (ex: 1º Semestre 2025):');
+    if(name) createSemester(name);
+  };
+  els.btnAddSubject.onclick = ()=> {
+    const sem = data.find(s=>s.id===currentSemesterId);
+    if(!sem) return alert('Nenhum semestre selecionado');
+    if(sem.subjects.length>=MAX_SUBJECTS) return alert('Máximo de matérias atingido');
+    const name = prompt('Nome da matéria:');
+    if(!name) return;
+    const subj = { id: uid(), name: name, teacher:'', color: '#7c3aed', phases: [], works: [], exams: [] };
+    for(let i=0;i<PHASES_PER_SUBJECT;i++){
+      subj.phases.push({ id: uid(), title: 'Fase '+(i+1), start:'', end:'', done:false, links:[], notes:''});
+    }
+    addSubject(currentSemesterId, subj);
+  };
+
+  // Editar matéria
+  function openSubjectEditor(sub){
+    const container = document.createElement('div');
+    const html = document.createElement('div');
+    html.innerHTML = `<h3>Editar: ${sub.name}</h3>`;
+    const teacher = document.createElement('input'); teacher.placeholder='Professor / responsável'; teacher.value = sub.teacher||'';
+    const name = document.createElement('input'); name.placeholder='Nome da matéria'; name.value = sub.name;
+    const saveBtn = document.createElement('button'); saveBtn.textContent='Salvar'; saveBtn.className='primary';
+    saveBtn.onclick = ()=>{ sub.name = name.value||sub.name; sub.teacher = teacher.value; save(); closeModal(); };
+    html.appendChild(name); html.appendChild(document.createElement('br'));
+    html.appendChild(teacher); html.appendChild(document.createElement('br'));
+    html.appendChild(document.createElement('br'));
+    html.appendChild(saveBtn);
+    container.appendChild(html);
+    openModal(container);
+  }
+
+  // Editar fase
+  function openPhaseEditor(sub, phase){
+    const c = document.createElement('div');
+    c.innerHTML = `<h3>Editar Fase - ${phase.title}</h3>`;
+    const title = document.createElement('input'); title.value = phase.title || '';
+    title.placeholder = 'Título da fase';
+    const start = document.createElement('input'); start.type='date'; start.value = phase.start||'';
+    const end = document.createElement('input'); end.type='date'; end.value = phase.end||'';
+    const notes = document.createElement('textarea'); notes.placeholder='Notas rápidas'; notes.value = phase.notes || '';
+    const linksLabel = document.createElement('div'); linksLabel.textContent = 'Links (um por linha)';
+    const linksArea = document.createElement('textarea'); linksArea.value = (phase.links||[]).join('\n');
+    const save = document.createElement('button'); save.textContent='Salvar'; save.className='primary';
+    save.onclick = ()=>{
+      phase.title = title.value||phase.title;
+      phase.start = start.value; phase.end = end.value;
+      phase.notes = notes.value;
+      phase.links = linksArea.value.split('\n').map(s=>s.trim()).filter(Boolean);
+      saveDataAndClose();
+    };
+    c.appendChild(title); c.appendChild(document.createElement('br'));
+    c.appendChild(start); c.appendChild(end); c.appendChild(document.createElement('br'));
+    c.appendChild(linksLabel); c.appendChild(linksArea); c.appendChild(document.createElement('br'));
+    c.appendChild(notes); c.appendChild(document.createElement('br'));
+    c.appendChild(save);
+    function saveDataAndClose(){ save(); closeModal(); }
+    openModal(c);
+  }
+
+  // Exportar/importar semestre
+  els.btnExport.onclick = ()=> {
+    if(!currentSemesterId) return alert('Selecione um semestre');
+    const sem = data.find(s=>s.id===currentSemesterId);
+    const blob = new Blob([JSON.stringify(sem,null,2)],{type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = (sem.name || 'semestre')+'.json'; a.click();
+    URL.revokeObjectURL(url);
+  };
+  els.btnImport.onclick = ()=> els.importFile.click();
+  els.importFile.onchange = (e)=>{
+    const f = e.target.files[0];
+    if(!f) return;
+    const reader = new FileReader();
+    reader.onload = ()=> {
+      try{
+        const imported = JSON.parse(reader.result);
+        imported.id = uid();
+        data.push(imported); save();
+        alert('Importado como novo semestre: ' + (imported.name||'Semestre'));
+      }catch(err){ alert('Arquivo inválido'); }
+    };
+    reader.readAsText(f);
+  };
+
+  // Render inicial
+  renderSemesterList();
+  renderSemesterView();
+
+  // Exemplo inicial
+  if(data.length===0){
+    createSemester('1º Semestre - Exemplo');
+    currentSemesterId = data[0].id;
+    const example = { id: uid(), name: 'Matemática', teacher:'Prof. Silva', color:'#f97316', phases:[], works:[], exams:[] };
+    for(let i=0;i<PHASES_PER_SUBJECT;i++) example.phases.push({ id: uid(), title: 'Fase '+(i+1), start:'', end:'', done:false, links:[], notes:''});
+    addSubject(currentSemesterId, example);
+    renderSemesterList(); renderSemesterView();
+  }
+});
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
 
 const storageKey = 'planner_semesters_v1';

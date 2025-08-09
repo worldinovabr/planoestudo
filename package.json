@@ -22,3 +22,17 @@
     "live-server": "^1.2.2"
   }
 }
+{
+  "name": "planner_pwa",
+  "version": "1.0.0",
+  "description": "Novo Planner Educacional Semestral PWA",
+  "main": "index.html",
+  "scripts": {
+    "start": "live-server --open=index.html"
+  },
+  "author": "worldinovabr",
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}
