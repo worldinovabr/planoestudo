@@ -1,16 +1,20 @@
 // Tela inicial: ao clicar em 'Começar', mostra planner
 document.addEventListener('DOMContentLoaded', () => {
-  const btnStart = document.getElementById('btnStart');
-  const welcome = document.getElementById('welcome');
-  const sidebar = document.getElementById('sidebar');
-  const content = document.getElementById('content');
-  if (btnStart && welcome && sidebar && content) {
-    btnStart.onclick = () => {
-      welcome.classList.add('hidden');
-      sidebar.classList.remove('hidden');
-      content.classList.remove('hidden');
-    };
+  // Inicializa planner após garantir que DOM está pronto
+  renderSemesterList();
+  renderSemesterView();
+  // Se não houver dados, cria exemplo
+  if(data.length===0){
+    createSemester('1º Semestre - Exemplo');
+    currentSemesterId = data[0].id;
+    const example = { id: uid(), name: 'Matemática', teacher:'Prof. Silva', color:'#f97316', phases:[], works:[], exams:[] };
+    for(let i=0;i<PHASES_PER_SUBJECT;i++) example.phases.push({ id: uid(), title: 'Fase '+(i+1), start:'', end:'', done:false, links:[], notes:''});
+    addSubject(currentSemesterId, example);
+    renderSemesterList();
+    renderSemesterView();
   }
+  // Notificações
+  requestNotifications();
 });
 // Verificação de carregamento do script
 console.log('Planner PWA carregado');
@@ -348,7 +352,7 @@ els.importFile.onchange = (e)=>{
 };
 
 // initial render
-renderSemesterList(); renderSemesterView();
+// Renderização inicial agora é feita no DOMContentLoaded
 
 // sample starter if empty
 if(data.length===0){
