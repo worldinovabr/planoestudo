@@ -8,30 +8,36 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header>
-    <h1>Planner Educacional — Semestral</h1>
-    <button id="btnAddSemester" class="primary">+ Novo Semestre</button>
+  <header class="main-header">
+    <div class="logo-area">
+      <img src="icons/icon-192.png" alt="Logo" class="logo" />
+      <span class="app-title">Planner Semestral</span>
+    </div>
+    <div class="user-area">
+      <span class="user-name">Usuário</span>
+    </div>
   </header>
 
-  <main id="main">
-  <!-- Tela inicial removida conforme solicitado -->
-    <aside id="sidebar" class="hidden">
-      <h2>Semestres</h2>
-      <ul id="semesterList"></ul>
-    </aside>
-    <section id="content" class="hidden">
+  <main class="layout-main">
+    <nav class="sidebar-nav">
+      <button id="btnAddSemester" class="sidebar-btn" title="Novo semestre">
+        <span>+</span>
+      </button>
+      <ul id="semesterList" class="nav-list"></ul>
+    </nav>
+    <section class="main-content">
       <div id="empty" class="center">Selecione ou crie um semestre para começar.</div>
       <div id="semesterView" class="hidden">
-        <div class="top">
+        <div class="top-bar">
           <h2 id="semesterTitle"></h2>
-          <div>
-            <button id="btnAddSubject" class="primary">+ Adicionar Matéria</button>
-            <button id="btnExport" title="Exportar JSON">Exportar</button>
-            <button id="btnImport" title="Importar JSON">Importar</button>
+          <div class="actions-bar">
+            <button id="btnAddSubject" class="primary">+ Matéria</button>
+            <button id="btnExport" class="icon-btn" title="Exportar JSON">⤓</button>
+            <button id="btnImport" class="icon-btn" title="Importar JSON">⤒</button>
             <input type="file" id="importFile" accept=".json" style="display:none"/>
           </div>
         </div>
-        <div id="subjects" class="grid"></div>
+        <div id="subjects" class="card-grid"></div>
       </div>
     </section>
   </main>

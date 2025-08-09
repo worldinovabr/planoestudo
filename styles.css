@@ -1,3 +1,186 @@
+/* Novo layout moderno */
+.main-header {
+  width: 100%;
+  background: linear-gradient(90deg, #7c3aed 0%, #2a1850 100%);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 32px;
+  box-shadow: 0 2px 16px #7c3aed44;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px #7c3aed44;
+}
+.app-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 1px;
+}
+.user-area {
+  color: #a78bfa;
+  font-size: 1.1rem;
+}
+.layout-main {
+  display: flex;
+  min-height: 80vh;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.sidebar-nav {
+  background: linear-gradient(120deg, #2a1850 60%, #7c3aed22 100%);
+  min-width: 90px;
+  padding: 32px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  border-radius: 0 24px 24px 0;
+  box-shadow: 0 2px 16px #7c3aed22;
+}
+.sidebar-btn {
+  background: #7c3aed;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 2rem;
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #7c3aed44;
+  margin-bottom: 18px;
+  transition: background 0.2s, transform 0.15s;
+}
+.sidebar-btn:hover {
+  background: #a78bfa;
+  transform: scale(1.08);
+}
+.nav-list {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
+.nav-list li {
+  background: #181f3a;
+  color: #fff;
+  margin: 8px 0;
+  padding: 12px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1.08rem;
+  transition: background 0.2s, transform 0.15s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.nav-list li.active, .nav-list li:hover {
+  background: #7c3aed44;
+  color: #a78bfa;
+  transform: scale(1.03);
+}
+.main-content {
+  flex: 1;
+  padding: 38px 32px;
+  background: linear-gradient(120deg, #2a1850 60%, #7c3aed22 100%);
+  border-radius: 24px;
+  min-height: 600px;
+  box-shadow: 0 2px 16px #7c3aed22;
+}
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.actions-bar {
+  display: flex;
+  gap: 12px;
+}
+.primary {
+  background: linear-gradient(90deg, #7c3aed 60%, #5f2eea 100%);
+  border: none;
+  padding: 12px 22px;
+  border-radius: 14px;
+  color: white;
+  cursor: pointer;
+  font-size: 1.12rem;
+  font-weight: 600;
+  box-shadow: 0 2px 12px #7c3aed44;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: 0.5px;
+}
+.primary:hover {
+  background: linear-gradient(90deg, #a78bfa 60%, #7c3aed 100%);
+  transform: scale(1.08);
+  box-shadow: 0 8px 24px #7c3aed99;
+}
+.icon-btn {
+  background: #181f3a;
+  color: #a78bfa;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.3rem;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #7c3aed22;
+  transition: background 0.2s, color 0.2s;
+}
+.icon-btn:hover {
+  background: #7c3aed44;
+  color: #fff;
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(320px,1fr));
+  gap: 24px;
+}
+.card {
+  background: linear-gradient(120deg, #7c3aed22 0%, #181f3a 100%);
+  padding: 24px;
+  border-radius: 18px;
+  border: 2px solid #7c3aed44;
+  box-shadow: 0 4px 24px #7c3aed44;
+  transition: box-shadow 0.2s, transform 0.15s;
+}
+.card:hover {
+  box-shadow: 0 10px 32px #7c3aed66;
+  transform: scale(1.04);
+}
+.card h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.15rem;
+  color: #fff;
+}
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 1.2rem;
+  color: #a78bfa;
+}
+@media (max-width: 900px) {
+  .layout-main { flex-direction: column; }
+  .sidebar-nav { min-width: 100%; flex-direction: row; gap: 8px; border-radius: 0 0 24px 24px; }
+  .main-content { padding: 18px 8px; border-radius: 0 0 24px 24px; }
+  .card-grid { grid-template-columns: 1fr; }
+}
 /* Tela inicial atraente */
 .welcome-card {
   width: 100%;
