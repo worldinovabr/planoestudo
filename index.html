@@ -14,12 +14,20 @@
   </header>
 
   <main id="main">
-    <aside id="sidebar">
+    <section id="welcome" class="welcome-card">
+      <div class="welcome-content">
+        <img src="icons/icon-192.png" alt="Planner" class="welcome-icon" />
+        <h2>Bem-vindo ao seu Planner Educacional!</h2>
+        <p>Organize seu semestre, matérias, fases de estudo, trabalhos e provas de forma simples e visual.<br>
+        Clique abaixo para começar:</p>
+        <button id="btnStart" class="primary">Começar</button>
+      </div>
+    </section>
+    <aside id="sidebar" class="hidden">
       <h2>Semestres</h2>
       <ul id="semesterList"></ul>
     </aside>
-
-    <section id="content">
+    <section id="content" class="hidden">
       <div id="empty" class="center">Selecione ou crie um semestre para começar.</div>
       <div id="semesterView" class="hidden">
         <div class="top">
@@ -31,7 +39,6 @@
             <input type="file" id="importFile" accept=".json" style="display:none"/>
           </div>
         </div>
-
         <div id="subjects" class="grid"></div>
       </div>
     </section>

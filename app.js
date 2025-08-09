@@ -1,3 +1,17 @@
+// Tela inicial: ao clicar em 'Começar', mostra planner
+document.addEventListener('DOMContentLoaded', () => {
+  const btnStart = document.getElementById('btnStart');
+  const welcome = document.getElementById('welcome');
+  const sidebar = document.getElementById('sidebar');
+  const content = document.getElementById('content');
+  if (btnStart && welcome && sidebar && content) {
+    btnStart.onclick = () => {
+      welcome.classList.add('hidden');
+      sidebar.classList.remove('hidden');
+      content.classList.remove('hidden');
+    };
+  }
+});
 // Verificação de carregamento do script
 console.log('Planner PWA carregado');
 window.onerror = function(msg, url, line, col, error) {
