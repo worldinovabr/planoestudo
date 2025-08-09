@@ -147,8 +147,12 @@ function renderSemesterView(){
 }
 
 function openModal(html){
-  if (!html) { els.modal.classList.add('hidden'); return; }
-  els.modalBody.innerHTML='';
+  if (!html || (html.innerHTML === '' && html.textContent === '')) {
+    els.modal.classList.add('hidden');
+    els.modalBody.innerHTML = '';
+    return;
+  }
+  els.modalBody.innerHTML = '';
   els.modalBody.appendChild(html);
   els.modal.classList.remove('hidden');
 }
