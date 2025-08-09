@@ -151,7 +151,17 @@ function renderSemesterView(){
 }
 
 function openModal(html){
-  if (!html || (html.innerHTML === '' && html.textContent === '')) {
+  // Só exibe o modal se houver conteúdo real
+  if (!html || (!html.innerHTML && !html.textContent)) {
+    els.modal.classList.add('hidden');
+    els.modalBody.innerHTML = '';
+    return;
+  }
+  // Verifica se o conteúdo é vazio ou só contém espaços/br
+  const temp = document.createElement('div');
+  temp.appendChild(html.cloneNode(true));
+  const isEmpty = !temp.textContent.trim() && !temp.querySelector('input,textarea,button,select');
+  if (isEmpty) {
     els.modal.classList.add('hidden');
     els.modalBody.innerHTML = '';
     return;
