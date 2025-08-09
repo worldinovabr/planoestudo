@@ -122,7 +122,17 @@ function renderSemesterView(){
   }
 }
 
-function openModal(html){ els.modalBody.innerHTML=''; els.modalBody.appendChild(html); els.modal.classList.remove('hidden'); }
+function openModal(html){
+  if (!html) { els.modal.classList.add('hidden'); return; }
+  els.modalBody.innerHTML='';
+  els.modalBody.appendChild(html);
+  els.modal.classList.remove('hidden');
+}
+// Garante que o modal está oculto ao iniciar
+window.addEventListener('DOMContentLoaded', ()=>{
+  const modal = document.getElementById('modal');
+  if (modal) modal.classList.add('hidden');
+});
 function closeModal(){ els.modal.classList.add('hidden'); }
 
 els.modalClose.onclick = closeModal;
